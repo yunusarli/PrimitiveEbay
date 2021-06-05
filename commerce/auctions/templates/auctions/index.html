@@ -1,7 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <div class="actives">
+        <h2>Active Listings</h2>
+    </div>
 
-    TODO
+    {% for product in products %}
+
+    <div class="container">
+        <div class="product">
+            <div class="image" style="color: white;">IMAGE</div>
+            <div class="info">
+                <h5> {{ product.title }} </h5>
+                <p> <strong>Price: {{ product.price }}$</strong></p>
+                <p> created  {{product.date}} </p>
+                
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
 {% endblock %}

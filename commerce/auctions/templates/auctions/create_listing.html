@@ -4,7 +4,21 @@
 {% block title %} Create {% endblock title %}
 
 {% block body %}
+    <div class="actives"><h2>Create a Listing</h2></div>
 
-<p>hello world</p>
-
+    {% if message %}
+        <h6> {{ message }} </h6>
+    {% endif %}
+    
+    <div class="form">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Name of the product" name="name">
+            <input type="text" placeholder="Description" name="description">
+            <input type="number" name="price">
+            <input type="text" placeholder="Link" name="link" >
+            <input type="text" placeholder="Category" name="category"> 
+            <input type="submit" value="Create" class="btn btn-success">
+        </form>
+    </div>
 {% endblock body %}

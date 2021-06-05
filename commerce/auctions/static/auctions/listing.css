@@ -1,0 +1,45 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.container{
+    width: 100%;
+    padding-top: 20px;
+}
+.container .product{
+    width: 100%;
+    min-height: 200px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+.container .product .image{
+    background-color: blue;
+}
+.container .product .info{
+    background-color: red;
+    padding: 40px 60px;
+}
+
+.actives{
+    width: 100%;
+}
+.actives h2{
+    text-align: center;
+}
+.form{
+    width: 80%;
+    margin: 40px auto;
+    text-align: center;
+}
+.form input{
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+}
+.form form{
+    padding-left: 40%;
+}

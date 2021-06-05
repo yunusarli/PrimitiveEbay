@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -9,8 +10,9 @@ class Listing(models.Model):
 
     """ Listing class for creating listing model """
 
-    createdby = models.ForeignKey(User,on_delete=models.CASCADE)
+    createdby = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
+    description = models.CharField(max_length=255,default="description")
     price = models.PositiveIntegerField()
     link = models.CharField(max_length=100,blank=True)
     category = models.CharField(max_length=50,default="Home")

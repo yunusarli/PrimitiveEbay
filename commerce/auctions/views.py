@@ -1,14 +1,17 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout,get_user_model,get_user
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User
+from django.shortcuts import redirect
+from .models import User, Listing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    products = Listing.objects.all()
+    return render(request, "auctions/index.html",{
+        'products':products,
+    })
 
 
 def login_view(request):
@@ -65,4 +68,32 @@ def register(request):
 
 
 def create_listing(request):
+    user = get_user(request)
+    is_auth = authenticate(username=user.username,password=user.password)
+
+    if request.method=="POST":
+        #take all of the informations about listing
+        name = request.POST['name']
+        description = request.POST['description']
+        price = request.POST['price']
+        link = request.POST['link']
+        category = request.POST['category']
+
+        if name and description:
+            
+            listing = Listing(
+                createdby=get_user(request),
+                title=name,
+                description=description,
+                price=price,
+                link=link,
+                category=category,
+                )
+            listing.save()
+            return redirect(index)
+            
+        else:
+            return render(request,'auctions/create_listing.html',{
+                'message':"you have to fill all of the inputs"
+            })
     return render(request,'auctions/create_listing.html')
