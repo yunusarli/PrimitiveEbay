@@ -1,0 +1,17 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %} All Bids {% endblock title %}
+
+{% block body %}
+
+    {% for bid in bids_list %}
+
+    <div class="bids" style="width: 100%; border:2px solid black; padding:10px 20px; margin:10px;">
+        <p>  Price: {{bid.price}}$</p>
+        <p> Given By: {{bid.user}} </p>
+    </div>
+    
+
+    {% endfor %}
+
+{% endblock body %}

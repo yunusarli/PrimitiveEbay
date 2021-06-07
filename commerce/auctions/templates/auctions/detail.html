@@ -1,0 +1,57 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %} Detail {% endblock title %}
+
+{% block body %}
+    <div class="content">
+        <h2> {{object.title}} </h2>
+
+        <div class="bigImage" style="width: 50%; height:300px; background-color:blue;">
+
+        </div>
+
+        <p>{{ object.description }}</p>
+
+        <p style="font-size:32px;"> <strong> {{object.price}}$ </strong> </p>
+        {% if message %}
+
+            <p><strong> {{message}} </strong></p>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Bids" style="display: block;" name="bid">
+            <input type="submit" value="Place Bids" name="newbid" class="btn btn-success" style="display: block; margin-top:20px; margin-bottom:20px">
+        </form>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="AllBids" name="allbids" class="btn btn-success" style="margin-bottom: 10px;">
+        </form>
+
+        <h3>Details</h3>
+        <p>Listed by: {{object.createdby}} </p>
+        <p>Category: {{object.category}} </p>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Add to WatchList" class="btn btn-success" name="watchlist">
+        </form>
+
+        <div class="comments" style="padding: 20px 40px;">
+            <h5>Comments</h5>
+            {% for comment in comments %}
+            <div class="comment" style="border: 1px solid black;
+             padding:10px 10px;">
+
+                <div class="comment-author">
+                    <p>Author :{{comment.author}} </p>
+                </div>
+                <div class="comment-content">
+                    <p>Comment : {{comment.comment}} </p>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock body %}

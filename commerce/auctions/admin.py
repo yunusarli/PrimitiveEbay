@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Listing,Bids
+from .models import Listing, Bid, Comment
 # Register your models here.
-admin.site.register(Listing)
-admin.site.register(Bids)
+
+class CommentInline(admin.StackedInline):
+    model = Comment
+
+class ArticleInline(admin.ModelAdmin):
+    inlines =  [
+        CommentInline,
+    ]
+
+admin.site.register(Listing,ArticleInline)
+admin.site.register(Bid)
+admin.site.register(Comment)
