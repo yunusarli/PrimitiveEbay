@@ -112,7 +112,7 @@ def create_listing(request):
                 category=category,
                 )
             listing.save()
-            return redirect(index)
+            return HttpResponseRedirect(reverse('index'))
             
         else:
             return render(request,'auctions/create_listing.html',{
@@ -132,8 +132,8 @@ def detail_view(request,pk):
         The last one is for leave a comment.
     """
     product_detail = Listing.objects.get(id=pk)
-
     title = product_detail.title
+    user = get_user(request)
     
     if request.method == 'POST':
 
@@ -154,7 +154,7 @@ def detail_view(request,pk):
 
             product_detail.save()
             #Create a new bid
-            user = get_user(request)
+            
             create_bid = Bid(user=user,title=title,price=bid)
             create_bid.save()
             
@@ -167,14 +167,20 @@ def detail_view(request,pk):
             return render(request,'auctions/allbids.html',{
                 'bids_list':bid_list(title),
             })
+        elif 'leave_a_comment' in request.POST:
+            cmmnt = request.POST['comment']
+            create_comment = Comment(title=product_detail,comment=cmmnt,author=user)
+            create_comment.save()
 
 
+    #To avoid multiple choises error, we used filter rather tha get() method.
+    comments = Comment.objects.filter(title=pk)
+    
 
     return render(request,'auctions/detail.html',{
 
         'object':product_detail,
-        
-
+        'comments':comments
     })
 
 
@@ -197,4 +203,26 @@ class ListingDeleteView(DeleteView):
             
         return super().dispatch(request, *args, **kwargs)
 
-#To Do: comments, WatchList, Categories, Images on database.
+def categories(request):
+    listings = []
+    for list_ in Listing.objects.all():
+        if not list_.category in listings:
+            listings.append(list_.category)
+
+    return render(request,'auctions/categories.html',{
+                'category':listings,
+            })
+
+def orientation(request,slug):
+    all_categories = []
+    for list_ in Listing.objects.all():
+        if list_.category==slug:
+            all_categories.append(list_)
+
+    return render(request,'auctions/view_categories.html',{
+        'all_categories':all_categories,
+    })
+
+
+#To Do:WatchList, Images on database.
+#not: gönderileri silmek yerine kapatman lazım ve kapattıklarının kazandıklarını da ekrana basman lazım.

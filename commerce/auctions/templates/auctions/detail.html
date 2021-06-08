@@ -38,17 +38,27 @@
         </form>
 
         <div class="comments" style="padding: 20px 40px;">
+            <div class="leave-a-comment">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <textarea name="comment" rows="5" placeholder="Leave a comment" style="display: block; width: 100%;
+                    padding: 20px 40px; resize:none;">
+                    </textarea>
+                    <input type="submit" value="Comment" name="leave_a_comment" class="btn btn-success">
+                </form>
+            </div>
             <h5>Comments</h5>
             {% for comment in comments %}
             <div class="comment" style="border: 1px solid black;
-             padding:10px 10px;">
-
+             padding:10px 10px; margin-bottom: 10px;">
+                
                 <div class="comment-author">
                     <p>Author :{{comment.author}} </p>
                 </div>
                 <div class="comment-content">
                     <p>Comment : {{comment.comment}} </p>
                 </div>
+                
             </div>
             {% endfor %}
 

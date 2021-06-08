@@ -1,0 +1,28 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %} View {{slug}} {% endblock title %}
+
+{% block body %} 
+
+    {% for product in all_categories %}
+
+    <div class="container">
+        <div class="product">
+            <div class="image" style="color: white;">IMAGE</div>
+            <div class="info">
+                <a href="{% url 'detail' product.pk%}" style="color: black;"> <h5> {{ product.title }} </h5></a>
+                <p> <strong>Price: {{ product.price }}$</strong></p>
+                <p> created  {{product.date}} </p>
+
+                {% if user == product.createdby %}
+                    <p><a href=" {% url 'delete'  product.pk%} " style="color: black;"> Delete </a></p>
+                {% endif %}
+                
+                
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+{% endblock body %}

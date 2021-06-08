@@ -10,5 +10,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path('create',views.create_listing,name="create"),
     path('<int:pk>/detail/',views.detail_view,name="detail"),
-    path('<int:pk>/delete/',ListingDeleteView.as_view(),name="delete")
+    path('<int:pk>/delete/',ListingDeleteView.as_view(),name="delete"),
+    path('categories/',views.categories,name="categories"),
+    path('categories/orientation/<str:slug>',views.orientation,name="orientation"),
 ]
