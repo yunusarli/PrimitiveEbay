@@ -37,6 +37,11 @@
             <input type="submit" value="Add to WatchList" class="btn btn-success" name="watchlist">
         </form>
 
+        <form action="" method="POST" style="margin-top:10px">
+            {% csrf_token %}
+            <input type="submit" value="Remove From WatchList" class="btn btn-danger" name="remove">
+        </form>
+
         <div class="comments" style="padding: 20px 40px;">
             <div class="leave-a-comment">
                 <form action="" method="POST">

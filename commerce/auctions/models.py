@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
+from commerce import settings
 
 
 class User(AbstractUser):
@@ -49,3 +50,11 @@ class Comment(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("index")
+
+class WatchLists(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    items = models.ManyToManyField(Listing)
+    
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("watchlist")

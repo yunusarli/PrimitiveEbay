@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, WatchLists
 from django.views.generic import DeleteView
 from django.core.exceptions import PermissionDenied
 
@@ -159,8 +159,29 @@ def detail_view(request,pk):
             create_bid.save()
             
         elif 'watchlist' in request.POST:
-            #add to watchlist
-            return HttpResponse('hello world')
+            if WatchLists.objects.filter(user = get_user(request),items=pk).exists():
+                return HttpResponseRedirect(reverse('watchlist'))
+            
+            user_list, created = WatchLists.objects.get_or_create(user=get_user(request))
+            user_list.items.add(product_detail)
+
+            return HttpResponseRedirect(reverse('watchlist'))
+
+        elif 'remove' in request.POST:
+
+            if WatchLists.objects.filter(user = get_user(request),items=pk).exists():
+                user_list, created = WatchLists.objects.get_or_create(user=get_user(request))
+                user_list.items.remove(product_detail)
+                return HttpResponseRedirect(reverse('watchlist'))
+            else:
+                return render(request,'auctions/watchlist.html',{
+                    'message':"Sorry this item doesnt exist",
+                })
+            
+            
+
+            
+
 
         elif 'allbids' in request.POST:
             #showing up the all bids
@@ -173,7 +194,7 @@ def detail_view(request,pk):
             create_comment.save()
 
 
-    #To avoid multiple choises error, we used filter rather tha get() method.
+    #To avoid multiple choises error, we used filter rather than the get() method.
     comments = Comment.objects.filter(title=pk)
     
 
@@ -224,5 +245,14 @@ def orientation(request,slug):
     })
 
 
-#To Do:WatchList, Images on database.
+def watchlist(request):
+    products = WatchLists.objects.filter(user=get_user(request))
+
+    return render(request,"auctions/watchlist.html",{
+
+        'products':products,
+    })
+
+
+#To Do:Images on database.
 #not: gönderileri silmek yerine kapatman lazım ve kapattıklarının kazandıklarını da ekrana basman lazım.

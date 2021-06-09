@@ -13,4 +13,6 @@ urlpatterns = [
     path('<int:pk>/delete/',ListingDeleteView.as_view(),name="delete"),
     path('categories/',views.categories,name="categories"),
     path('categories/orientation/<str:slug>',views.orientation,name="orientation"),
+    path('watchlist/',views.watchlist,name="watchlist"),
+   
 ]
