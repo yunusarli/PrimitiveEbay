@@ -6,23 +6,36 @@
     <div class="content">
         <h2> {{object.title}} </h2>
 
-        <div class="bigImage" style="width: 50%; height:300px; background-color:blue;">
-
+        <div class="bigImage" style="width: 50%; min-height:300px;">
+        {% if object.image %}
+            <img src="{{ object.image.url }}" alt="Image">
+        {% endif %}
         </div>
 
         <p>{{ object.description }}</p>
-
-        <p style="font-size:32px;"> <strong> {{object.price}}$ </strong> </p>
+        {% if isopen %}
+            <p style="font-size:32px;"> <strong> {{object.price}}$ </strong> </p>
+        {% else %}
+            <div>
+                <p style="font-size:32px; background-color:green; display:inline-block; padding: 5px 10px; color:white;"> <strong> max-price: {{max_bid}}$ </strong> </p>
+            </div>
+        {% endif %}
         {% if message %}
 
             <p><strong> {{message}} </strong></p>
         {% endif %}
 
+        {% if isopen %}
         <form action="" method="POST">
             {% csrf_token %}
             <input type="text" placeholder="Bids" style="display: block;" name="bid">
             <input type="submit" value="Place Bids" name="newbid" class="btn btn-success" style="display: block; margin-top:20px; margin-bottom:20px">
         </form>
+        {% else %}
+            <p style="background-color:green; display:inline-block; padding: 5px 10px; color:white;">
+            Winner: {{winner}}
+            </p>
+        {% endif %}
         <form action="" method="POST">
             {% csrf_token %}
             <input type="submit" value="AllBids" name="allbids" class="btn btn-success" style="margin-bottom: 10px;">
@@ -32,10 +45,14 @@
         <p>Listed by: {{object.createdby}} </p>
         <p>Category: {{object.category}} </p>
 
-        <form action="" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="Add to WatchList" class="btn btn-success" name="watchlist">
-        </form>
+        {% if isopen %}
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Add to WatchList" class="btn btn-success" name="watchlist">
+            </form>
+
+        {% endif %}
 
         <form action="" method="POST" style="margin-top:10px">
             {% csrf_token %}
@@ -44,13 +61,15 @@
 
         <div class="comments" style="padding: 20px 40px;">
             <div class="leave-a-comment">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <textarea name="comment" rows="5" placeholder="Leave a comment" style="display: block; width: 100%;
-                    padding: 20px 40px; resize:none;">
-                    </textarea>
-                    <input type="submit" value="Comment" name="leave_a_comment" class="btn btn-success">
-                </form>
+                {% if isopen %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <textarea name="comment" rows="5" placeholder="Leave a comment" style="display: block; width: 100%;
+                        padding: 20px 40px; resize:none;">
+                        </textarea>
+                        <input type="submit" value="Comment" name="leave_a_comment" class="btn btn-success">
+                    </form>
+                {% endif %}
             </div>
             <h5>Comments</h5>
             {% for comment in comments %}

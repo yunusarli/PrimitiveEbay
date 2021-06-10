@@ -9,18 +9,24 @@
 }
 .container .product{
     width: 100%;
+    max-width: 960px;
     min-height: 200px;
     border: 1px solid black;
     border-radius: 5px;
     margin-bottom: 10px;
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 30% 70%;
 }
 .container .product .image{
-    background-color: blue;
+    max-height: 300px;
+    width: 300px;
+}
+.container .product .image img{
+    max-height: 300px;
+    width: 300px;
 }
 .container .product .info{
-    background-color: red;
+    background-color: antiquewhite;
     padding: 40px 60px;
 }
 

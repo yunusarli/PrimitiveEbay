@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
 from .models import User, Listing, Bid, Comment, WatchLists
-from django.views.generic import DeleteView
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 
 #a function return all bids list with desired name
 def bid_list(title):
@@ -86,7 +85,7 @@ def register(request):
 
         return render(request, "auctions/register.html")
 
-
+@login_required(login_url='login')
 def create_listing(request):
 
     user = get_user(request)
@@ -100,7 +99,7 @@ def create_listing(request):
         price = request.POST['price']
         link = request.POST['link']
         category = request.POST['category']
-
+        image = request.FILES['img']
         if name and description:
             
             listing = Listing(
@@ -110,6 +109,7 @@ def create_listing(request):
                 price=price,
                 link=link,
                 category=category,
+                image=image,
                 )
             listing.save()
             return HttpResponseRedirect(reverse('index'))
@@ -121,7 +121,7 @@ def create_listing(request):
     return render(request,'auctions/create_listing.html')
 
 
-
+@login_required(login_url='login')
 def detail_view(request,pk):
 
     """ 
@@ -196,34 +196,43 @@ def detail_view(request,pk):
 
     #To avoid multiple choises error, we used filter rather than the get() method.
     comments = Comment.objects.filter(title=pk)
-    
+    winner = ""
+    max_bid = 0
+    if not product_detail.isopen:
 
+        all_bids = bid_list(title)
+        hiddenbids = [0]
+
+        for bid in all_bids:
+            hiddenbids.append(int(bid.price))
+        for k in all_bids:
+            if hiddenbids[-1]==int(bid.price):
+                winner = bid.user
+        max_bid = sorted(hiddenbids)[-1]
+
+    
     return render(request,'auctions/detail.html',{
 
         'object':product_detail,
-        'comments':comments
+        'comments':comments,
+        'isopen':product_detail.isopen,
+        'max_bid':max_bid,
+        'winner':winner,
     })
 
+@login_required(login_url='login')
+def delete_view(request,pk):
+    if request.method=='POST':
+        object_ = Listing.objects.get(id=pk)
+        object_.isopen = False
+        object_.save()
+        return HttpResponseRedirect(reverse('index'))
 
-class ListingDeleteView(DeleteView):
-    """ a django class-based view to delete the post. """
-    model = Listing
-    template_name = 'auctions/delete.html' 
-    success_url = reverse_lazy('index')
-    login_url = 'login'
+    return render(request,'auctions/delete.html',{
+        'object':Listing.objects.get(id=pk),
+    })
 
-    def dispatch(self, request, *args, **kwargs):
-        """ 
-            This function allows us to disallow users without permission  
-        """
-
-        obj = self.get_object()
-
-        if not obj.createdby == self.request.user:
-            raise PermissionDenied
-            
-        return super().dispatch(request, *args, **kwargs)
-
+@login_required(login_url='login')
 def categories(request):
     listings = []
     for list_ in Listing.objects.all():
@@ -234,6 +243,7 @@ def categories(request):
                 'category':listings,
             })
 
+@login_required(login_url='login')
 def orientation(request,slug):
     all_categories = []
     for list_ in Listing.objects.all():
@@ -244,7 +254,7 @@ def orientation(request,slug):
         'all_categories':all_categories,
     })
 
-
+@login_required(login_url='login')
 def watchlist(request):
     products = WatchLists.objects.filter(user=get_user(request))
 
@@ -255,4 +265,3 @@ def watchlist(request):
 
 
 #To Do:Images on database.
-#not: gönderileri silmek yerine kapatman lazım ve kapattıklarının kazandıklarını da ekrana basman lazım.

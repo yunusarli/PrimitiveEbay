@@ -9,14 +9,24 @@
 
     <div class="container">
         <div class="product">
-            <div class="image" style="color: white;">IMAGE</div>
+            {% if product.image %}
+            <div class="image" style="color: white;">  <img src="{{ product.image.url }}" alt="Image">  </div>
+            {% endif %}
             <div class="info">
-                <a href="{% url 'detail' product.id %}" style="color: black;"> <h5> {{ product.title }} </h5></a>
+
+                    <a href="{% url 'detail' product.id %}" style="color: black;"> <h5> {{ product.title }} </h5></a>
+                
+                
                 <p> <strong>Price: {{ product.price }}$</strong></p>
                 <p> created  {{product.date}} </p>
 
-                {% if user == product.createdby %}
-                    <p><a href=" {% url 'delete'  product.pk%} " style="color: black;"> Delete </a></p>
+                {% if user == product.createdby and product.isopen%}
+                    <p><a href=" {% url 'delete'  product.pk%} " style="color: black;"> Close </a></p>
+                    
+                {% endif %}
+
+                {% if not product.isopen %}
+                    <p style="color: black;"> Closed <p>
                 {% endif %}
                 
             </div>

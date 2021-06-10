@@ -28,7 +28,7 @@
             {% for k in product.items.all %}
         <div class="container">
             <div class="product">
-                <div class="image" style="color: white;">IMAGE</div>
+                <div class="image" style="color: white;"> <img src="{{ k.image.url }}" alt="Image"> </div>
                 <div class="info">
                     <a href="{% url 'detail' k.pk%}" style="color: black;"> <h5> {{ k.title }} </h5></a>
                     <p> <strong>Price: {{ k.price }}$</strong></p>

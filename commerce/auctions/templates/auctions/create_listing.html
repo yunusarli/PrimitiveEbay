@@ -11,13 +11,14 @@
     {% endif %}
     
     <div class="form">
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="text" placeholder="Name of the product" name="name">
             <input type="text" placeholder="Description" name="description">
             <input type="number" name="price">
             <input type="text" placeholder="Link" name="link" >
             <input type="text" placeholder="Category" name="category"> 
+            <input type="file" name="img">
             <input type="submit" value="Create" class="btn btn-success">
         </form>
     </div>
